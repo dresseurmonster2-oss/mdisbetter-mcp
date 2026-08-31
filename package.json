@@ -1,0 +1,40 @@
+{
+  "name": "mdisbetter-mcp",
+  "version": "0.1.0",
+  "description": "MCP server exposing the mdisbetter.com file converter to an agent over stdio. 162 input formats, 3649 proven conversions.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mdisbetter-mcp": "src/index.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@vercel/blob": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dresseurmonster2-oss/mdisbetter-mcp.git"
+  },
+  "homepage": "https://mdisbetter.com",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "markdown",
+    "file-conversion",
+    "llm",
+    "ai",
+    "converter"
+  ]
+}
