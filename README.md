@@ -29,7 +29,7 @@ change that keeps the codecs is a stream copy and has no such limit.
 ## Requirements
 
 - Node.js 20 or later.
-- An mdisbetter.com API key. Keys start with `mdb_sk_`.
+- An mdisbetter.com account and an API key. Signup is required; keys start with `mdb_sk_`.
 
 Create one from your dashboard, under API keys. The plaintext key is
 shown once and never again: only its hash is stored, so nobody can
@@ -61,9 +61,9 @@ Two environment variables, one of them optional.
 | `MDISBETTER_API_KEY` | yes | Your key, starting with `mdb_sk_`. |
 | `MDISBETTER_BASE_URL` | no | Defaults to `https://mdisbetter.com`. Point it at a preview deployment to test against one. |
 
-The key is read from the environment and from nowhere else. It is never
-a tool argument, so no prompt can talk the model into revealing it, and
-the server never writes it to a file.
+The key is read from the server environment and is never a tool argument.
+The server does not write it to an output file. Keep your client configuration
+private, and revoke the key from your dashboard if it is exposed.
 
 ## Wire it into a client
 
@@ -128,7 +128,10 @@ extension: `report.docx` becomes `report.pdf` in the same directory. If
 that name is taken the server writes `report-1.pdf` instead. It never
 overwrites a file it was not pointed at, and it never touches the input.
 
-Files are capped at 150 MB, which is what the conversion engine accepts.
+The server rejects local inputs above 150 MB. The effective limit is lower
+when your account plan or the conversion family requires it: Free accounts
+have a 10 MB file limit, and document conversions have a 25 MB family limit.
+The server ceiling is not a 150 MB allowance for every format or account.
 
 Under 4 MB the file travels in the request itself, which is one round
 trip. Above it, the server uploads to storage first and sends only the
@@ -147,6 +150,57 @@ avif, bmp, dds, eps, gif, hdr, ico, jng, jp2, jpeg, jpg, miff, pbm, pcx,
 pdf, pgm, pnm, ppm, ps, psd, ras, sgi, tga, tif, tiff, wbmp, webp, xpm.
 ```
 
+## Walkthrough: local HTML to Markdown
+
+1. Sign up or sign in at [your dashboard](https://mdisbetter.com/dashboard),
+   create an API key and save it when it is shown. Configure your MCP client
+   as above and restart it. Keep the key out of prompts and source control.
+2. Save this owned example as `field-notes.html` on the machine running the server:
+
+```html
+<html><body><h1>Harbor field notes</h1><p>Inspection marker: MCPCA0420261013. Tide reading: 42 centimetres.</p><h2>Actions</h2><ul><li>Check the north gate.</li><li>Record the reading.</li></ul></body></html>
+```
+
+3. Ask your client to call these tools in order. Replace the input path with
+   the actual absolute path, using a drive-qualified path on Windows:
+
+```json
+{"name":"list_conversions","arguments":{"extension":"html"}}
+{"name":"convert_file","arguments":{"path":"/absolute/path/field-notes.html","target":"md"}}
+```
+
+Check that the first answer lists `md` before converting. The second answer
+reports where it wrote the file. Open that Markdown file and verify the heading,
+reading and both action items. These are MCP tool arguments, not a separate
+public HTTP interface or a standalone conversion command.
+
+The verified output is:
+
+```markdown
+# Harbor field notes
+
+Inspection marker: MCPCA0420261013. Tide reading: 42 centimetres.
+
+## Actions
+
+-   Check the north gate.
+-   Record the reading.
+```
+
+Verified against source `84b2bed` and production on October 13, 2026
+(Singapore time): a fresh ordinary Free account started with 50 credits.
+Listing HTML targets cost zero credits; converting this file over real stdio
+cost 0.5 credit and wrote 151 bytes. The identical conversion authenticated
+with an ordinary website session also cost 0.5 credit and returned identical
+bytes. The heading, marker, 42-centimetre reading and both actions survived.
+An unsupported HTML-to-PNG request wrote no file and cost zero credits.
+The test key was revoked and the synthetic account disabled afterward.
+
+This small HTML example does not certify every catalogue pair, large uploads,
+paid-plan limits, your client configuration or complex document fidelity.
+No account allowance was increased for the test. Inspect each result before
+using it; an explicit `output_path` replaces an existing file at that path.
+
 ## When the file does not come back
 
 The server translates each answer rather than passing along a bare
@@ -157,7 +211,7 @@ status code.
 | Out of credits | How many credits the conversion costs, how many remain, how many are missing, and the top-up page. This is not a fault: the account is simply out of credits, and the conversion did not happen. |
 | Key rejected | The key is missing, invalid, or revoked. Set `MDISBETTER_API_KEY`. |
 | File refused | The pair is proven, so the file itself is the problem: contents that do not match the extension, or something the engine could not read. |
-| File too large | Over the 150 MB the engine accepts. |
+| File too large | The local server ceiling, account plan limit or conversion family limit was exceeded. |
 | Converter at capacity | The service sheds load on purpose rather than degrading. Nothing broke, nothing was charged, retry in a few seconds. |
 | Service unavailable or timed out | Said plainly, and no file is written. |
 
