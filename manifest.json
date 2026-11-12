@@ -1,0 +1,57 @@
+{
+  "manifest_version": "0.3",
+  "name": "mdisbetter-mcp",
+  "display_name": "MDisBetter file converter",
+  "version": "0.1.0",
+  "description": "Convert a local file to another format through mdisbetter.com: documents, images, ebooks, audio, video and more.",
+  "long_description": "Lets an agent convert files through the mdisbetter.com converter. Two tools: `convert_file` takes a path and an output format, writes the converted file and returns its path; `list_conversions` returns the output formats proven for an input extension. One local file per call. An mdisbetter.com account and an API key are required, and conversions use the same credits as the website.",
+  "author": {
+    "name": "MDisBetter",
+    "url": "https://mdisbetter.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dresseurmonster2-oss/mdisbetter-mcp"
+  },
+  "homepage": "https://mdisbetter.com",
+  "documentation": "https://github.com/dresseurmonster2-oss/mdisbetter-mcp#readme",
+  "support": "https://github.com/dresseurmonster2-oss/mdisbetter-mcp/issues",
+  "license": "MIT",
+  "keywords": ["file conversion", "converter", "pdf", "markdown", "documents", "images", "audio", "video"],
+  "privacy_policies": ["https://mdisbetter.com/legal/privacy"],
+  "server": {
+    "type": "node",
+    "entry_point": "src/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/src/index.js"],
+      "env": {
+        "MDISBETTER_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "MDisBetter API key",
+      "description": "Create one in your mdisbetter.com dashboard, under API keys. It starts with mdb_sk_.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "tools": [
+    {
+      "name": "convert_file",
+      "description": "Convert one local file to another format and return the path of the converted file."
+    },
+    {
+      "name": "list_conversions",
+      "description": "List the output formats available for an input extension, or every accepted input extension."
+    }
+  ],
+  "compatibility": {
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  }
+}

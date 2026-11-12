@@ -52,6 +52,16 @@ Or run it without cloning:
 npx -y github:dresseurmonster2-oss/mdisbetter-mcp
 ```
 
+### As an MCP bundle
+
+Clients that open `.mcpb` bundles can install the server from the file attached to each
+[release](https://github.com/dresseurmonster2-oss/mdisbetter-mcp/releases): download
+`mdisbetter-mcp.mcpb`, open it, and enter your API key when asked. The bundle is the same code
+as this repository with its dependencies included; build it yourself with `npm run bundle`.
+
+The server is listed in the official MCP Registry as
+`io.github.dresseurmonster2-oss/mdisbetter-mcp`.
+
 ## Configure
 
 Two environment variables, one of them optional.

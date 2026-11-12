@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.dresseurmonster2-oss/mdisbetter-mcp",
+  "title": "MDisBetter file converter",
+  "description": "Convert a local file to another format through mdisbetter.com: documents, images, audio, video.",
+  "repository": {
+    "url": "https://github.com/dresseurmonster2-oss/mdisbetter-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://mdisbetter.com",
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/dresseurmonster2-oss/mdisbetter-mcp/releases/download/v0.1.0/mdisbetter-mcp.mcpb",
+      "fileSha256": "36f91fe1733ba09a2c04ce0dfd2a5f4278d4c1f6947ea3ffb6431c9535a15151",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "MDISBETTER_API_KEY",
+          "description": "Your mdisbetter.com API key (starts with mdb_sk_), created in the dashboard under API keys.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

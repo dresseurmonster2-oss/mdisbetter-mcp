@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "bundle": "npx -y @anthropic-ai/mcpb pack . mcpb-out/mdisbetter-mcp.mcpb"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

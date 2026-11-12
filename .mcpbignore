@@ -1,0 +1,8 @@
+/test/
+/mcpb-out/
+/.github/
+/server.json
+/scripts/
+*.mcpb
+/.env
+/package-lock.json
