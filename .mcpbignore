@@ -6,3 +6,5 @@
 *.mcpb
 /.env
 /package-lock.json
+/Dockerfile
+/.dockerignore
